@@ -27,7 +27,7 @@ Exit criteria for every phase: `pnpm typecheck`, `pnpm lint`, `pnpm test` pass; 
 - [x] **Phase 4 – Alerts** (`phase-4-alerts`): workers/alerts.ts, NDMA SACHET RSS every 5 min → CAP 1.2 XML (event,
   severity, area polygon/district, sender, expiry). Filled polygons by severity; district-only alerts joined to
   datameet districts GeoJSON. Drop expired.
-- [ ] **Phase 5 – News** (`phase-5-news`): workers/news.ts, GDELT DOC 2.0 artlist + configurable Indian RSS feeds;
+- [x] **Phase 5 – News** (`phase-5-news`): workers/news.ts, GDELT DOC 2.0 artlist + configurable Indian RSS feeds;
   geocode with GeoNames India gazetteer (pop > 50k), drop unmatched; dedupe by URL + title similarity. Clustered
   pins + viewport-filtered live feed panel.
 - [ ] **Phase 6 – Ships** (`phase-6-ships`): workers/ships.ts, one persistent AISStream WebSocket (subscribe within
@@ -40,7 +40,7 @@ Exit criteria for every phase: `pnpm typecheck`, `pnpm lint`, `pnpm test` pass; 
   Bengaluru.
 
 ## Next step
-Phase 5 – News, on branch `phase-5-news`.
+Phase 6 – Ships, on branch `phase-6-ships`.
 
 ## Notes / deviations
 - Phase 0 was run in a local Windows session, not the cloud: Redis, Docker and gh were not installed. The
@@ -104,3 +104,19 @@ Phase 5 – News, on branch `phase-5-news`.
 - Phase 4 was **not verified with real data**: sachet.ndma.gov.in is blocked in the cloud (403, worker backs off
   5 min). The real SACHET RSS and CAP layout (link format, areaDesc wording, geocodes) has not been seen. Check
   `parseRss` and the district matching against a live feed first, before relying on this layer.
+- Phase 5: `workers/news.ts` runs every 5 min. It fetches GDELT DOC 2.0 artlist (`GDELT_QUERY`, last 1 h) and the
+  `NEWS_RSS_FEEDS` (RSS 2.0 or Atom) with allSettled, so it fails only if every source fails. Articles older than 6 h
+  are dropped. Dedupe compares normalised URLs (no utm/fbclid, www/m/amp, trailing slash) and title token Jaccard
+  >= 0.6, against both this batch and the stories already on the map. Geocoding uses the gazetteer: the earliest
+  capitalised 1–3 word phrase in the headline (then the summary), longest name first, largest population on ties.
+  Unmatched stories are dropped. TTL is 6 h from publication; `merge` keeps stories between polls.
+- **Gazetteer TODO:** `apps/ingest/data/gazetteer-in.json` has not been built yet, because download.geonames.org is
+  blocked in the cloud. Until it is, the worker logs a warning and uses `fixtures/gazetteer-in.sample.json` (56 cities,
+  hand-made). To build it: download IN.zip from GeoNames, unzip IN.txt, then run
+  `pnpm --filter @ind-intg/ingest build:gazetteer IN.txt` (populated places > 50k, ASCII alternate names).
+- Phase 5 web: clustered purple pins (MapLibre cluster; count labels only when the style has glyphs; clicking a cluster
+  zooms in). The "News in view" panel lists the stories inside the current map bounds, newest first (top 50), with
+  https-only links. The disclaimer moved up so it no longer overlaps the attribution.
+- Phase 5 was **not verified with real data**: api.gdeltproject.org, download.geonames.org and the news sites are
+  blocked in the cloud. The default RSS feed URLs (The Hindu, Indian Express, Hindustan Times) are unverified.
+- Mobile (390 px): the layer panel, clock and news panel crowd each other. This is left for the Phase 7 mobile layout.

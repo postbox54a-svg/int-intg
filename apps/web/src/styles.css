@@ -49,7 +49,7 @@ html, body, #root { margin: 0; height: 100%; }
   background: var(--panel); border: 1px solid var(--border); border-radius: 6px; padding: 4px 8px;
 }
 .disclaimer {
-  position: absolute; left: 50%; bottom: 8px; transform: translateX(-50%); z-index: 2;
+  position: absolute; left: 50%; bottom: 36px; transform: translateX(-50%); z-index: 2;
   max-width: calc(100% - 340px); text-align: center; font-size: 11px; color: var(--muted);
   background: var(--panel); border-radius: 6px; padding: 4px 10px;
 }
@@ -57,6 +57,7 @@ html, body, #root { margin: 0; height: 100%; }
 @media (max-width: 640px) {
   .panel.open { width: calc(100% - 24px); }
   .disclaimer { max-width: calc(100% - 24px); bottom: 36px; }
+  .basemap-note { bottom: 72px; }
 }
 
 .maplibregl-ctrl.maplibregl-ctrl-attrib { background: var(--panel); color: var(--muted); }
@@ -73,3 +74,23 @@ html, body, #root { margin: 0; height: 100%; }
 .popup dt { color: var(--muted); }
 .popup dd { margin: 0; }
 .popup a { grid-column: 1 / -1; color: #79c0ff; margin-top: 4px; }
+
+.news-feed {
+  position: absolute; top: 56px; right: 12px; z-index: 2; width: 320px; max-height: calc(100% - 200px);
+  display: flex; flex-direction: column;
+  background: var(--panel); border: 1px solid var(--border); border-radius: 8px;
+}
+.news-feed-toggle {
+  background: none; border: 0; color: var(--text); text-align: left; padding: 8px 12px; font-size: 13px; font-weight: 600; cursor: pointer;
+}
+.news-list { list-style: none; margin: 0; padding: 0 12px 8px; overflow: auto; }
+.news-list li { padding: 6px 0; border-top: 1px solid var(--border); font-size: 13px; }
+.news-list a { color: var(--text); text-decoration: none; }
+.news-list a:hover { text-decoration: underline; }
+.news-meta { margin-top: 2px; font-size: 11px; color: var(--muted); }
+.news-empty { color: var(--muted); }
+.basemap-note { top: auto; right: auto; bottom: 36px; left: 12px; }
+
+@media (max-width: 640px) {
+  .news-feed { left: 12px; right: 12px; width: auto; top: auto; bottom: 108px; max-height: 40%; }
+}

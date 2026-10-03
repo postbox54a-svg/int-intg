@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- SYNTHETIC FIXTURE: invented articles in Atom format. -->
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Example Wire (synthetic)</title>
+  <entry>
+    <title>Bhubaneswar smart city project wins award</title>
+    <link rel="alternate" href="https://example-wire.invalid/bhubaneswar-award"/>
+    <updated>2026-10-03T14:45:00Z</updated>
+    <summary>Award announced in New Delhi.</summary>
+  </entry>
+  <entry>
+    <title>Visakhapatnam beach clean-up draws volunteers</title>
+    <link rel="self" href="https://example-wire.invalid/feed/vizag"/>
+    <link rel="alternate" href="https://example-wire.invalid/vizag-cleanup"/>
+    <updated>2026-10-03T14:15:00Z</updated>
+  </entry>
+</feed>

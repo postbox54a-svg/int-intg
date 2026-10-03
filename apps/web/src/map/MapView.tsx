@@ -14,6 +14,8 @@ interface Props {
   data: LayerData;
   enabled: ReadonlySet<LayerId>;
   onBasemapFallback?: (fallback: boolean) => void;
+  /** Visible area [west, south, east, north], reported after each move. */
+  onViewportChange?: (bounds: [number, number, number, number]) => void;
 }
 
 const renderers = Object.entries(RENDERERS) as [LayerId, LayerRenderer][];
@@ -38,7 +40,7 @@ type Deck = {
   IconLayer: typeof import('@deck.gl/layers').IconLayer;
 };
 
-export function MapView({ projection, data, enabled, onBasemapFallback }: Props) {
+export function MapView({ projection, data, enabled, onBasemapFallback, onViewportChange }: Props) {
   const container = useRef<HTMLDivElement>(null);
   const [map, setMap] = useState<MlMap | null>(null);
   const [deck, setDeck] = useState<Deck | null>(null);
@@ -77,14 +79,24 @@ export function MapView({ projection, data, enabled, onBasemapFallback }: Props)
         for (const layer of soiLayers(fallback)) m.addLayer(layer);
         // MapLibre data layers go under the SOI line so the official boundary stays on top.
         for (const [id, renderer] of renderers) {
-          m.addSource(id, { type: 'geojson', data: (renderer.toGeoJSON ?? toFeatureCollection)([]) });
+          m.addSource(id, { type: 'geojson', data: (renderer.toGeoJSON ?? toFeatureCollection)([]), ...renderer.source });
           for (const layer of renderer.layers) {
+            // Text needs glyphs, which the offline fallback style doesn't have.
+            if (layer.type === 'symbol' && !m.getStyle().glyphs) continue;
             m.addLayer(layer, 'soi-boundary-casing');
             m.on('mouseenter', layer.id, () => (m.getCanvas().style.cursor = 'pointer'));
             m.on('mouseleave', layer.id, () => (m.getCanvas().style.cursor = ''));
             m.on('click', layer.id, (e) => {
               const f = e.features?.[0];
               if (!f) return;
+              if (f.properties.cluster && f.geometry.type === 'Point') {
+                const center = f.geometry.coordinates as [number, number];
+                void m
+                  .getSource<GeoJSONSource>(id)
+                  ?.getClusterExpansionZoom(f.properties.cluster_id as number)
+                  .then((zoom) => m.easeTo({ center, zoom }));
+                return;
+              }
               const at = f.geometry.type === 'Point' ? (f.geometry.coordinates as [number, number]) : e.lngLat;
               openPopup.current(id, at, popupContent(renderer.popup(f.properties), renderer.link?.(f.properties)));
             });
@@ -94,6 +106,9 @@ export function MapView({ projection, data, enabled, onBasemapFallback }: Props)
         const overlay = new MapboxOverlay({ interleaved: true, layers: [] });
         m.addControl(overlay);
         setDeck({ overlay, Overlay: MapboxOverlay, IconLayer });
+        const report = () => onViewportChange?.(m.getBounds().toArray().flat() as [number, number, number, number]);
+        m.on('moveend', report);
+        report();
         setMap(m);
       });
     })();
@@ -121,7 +136,9 @@ export function MapView({ projection, data, enabled, onBasemapFallback }: Props)
     if (!map) return;
     for (const [id, renderer] of renderers) {
       map.getSource<GeoJSONSource>(id)?.setData((renderer.toGeoJSON ?? toFeatureCollection)(data[id] ?? []));
-      for (const layer of renderer.layers) map.setLayoutProperty(layer.id, 'visibility', enabled.has(id) ? 'visible' : 'none');
+      for (const layer of renderer.layers) {
+        if (map.getLayer(layer.id)) map.setLayoutProperty(layer.id, 'visibility', enabled.has(id) ? 'visible' : 'none');
+      }
     }
     if (popup.current && !enabled.has(popup.current.layer)) {
       popup.current.popup.remove();
