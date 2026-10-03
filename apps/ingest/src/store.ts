@@ -12,12 +12,32 @@ export class FeatureStore {
 
   /** All live features of a layer. Ids whose key has expired are pruned from the index. */
   async snapshot(layer: LayerId): Promise<Feature[]> {
+    return (await this.load(layer)).features;
+  }
+
+  private async load(layer: LayerId): Promise<{ features: Feature[]; expired: string[] }> {
     const ids = await this.redis.smembers(indexKey(layer));
-    if (!ids.length) return [];
+    if (!ids.length) return { features: [], expired: [] };
     const values = await this.redis.mget(...ids.map((id) => featureKey(layer, id)));
     const expired = ids.filter((_, i) => values[i] == null);
     if (expired.length) await this.redis.srem(indexKey(layer), ...expired);
-    return values.filter((v): v is string => v != null).map((v) => JSON.parse(v) as Feature);
+    return { features: values.filter((v): v is string => v != null).map((v) => JSON.parse(v) as Feature), expired };
+  }
+
+  /**
+   * Adds or refreshes features without removing absent ones: for sources where a missed poll should not drop a
+   * feature (flights). Features expire through their TTL; expired ids are published as a `remove` delta.
+   */
+  async merge(layer: LayerId, features: Feature[], ttlSeconds: number): Promise<{ upserted: number; removed: number }> {
+    const { features: current, expired } = await this.load(layer);
+    const previous = new Map(current.map((f) => [f.id, JSON.stringify(f)]));
+    const changed = await this.write(layer, features, previous, ttlSeconds);
+    const seen = new Set(features.map((f) => f.id));
+    if (seen.size) await this.redis.sadd(indexKey(layer), ...seen);
+    const removed = expired.filter((id) => !seen.has(id));
+    if (changed.length) await this.publish({ type: 'upsert', layer, features: changed });
+    if (removed.length) await this.publish({ type: 'remove', layer, ids: removed });
+    return { upserted: changed.length, removed: removed.length };
   }
 
   /**
@@ -26,14 +46,8 @@ export class FeatureStore {
    */
   async sync(layer: LayerId, features: Feature[], ttlSeconds: number): Promise<{ upserted: number; removed: number }> {
     const previous = new Map((await this.snapshot(layer)).map((f) => [f.id, JSON.stringify(f)]));
-    const changed: Feature[] = [];
-    const next = new Set<string>();
-    for (const f of features) {
-      const json = JSON.stringify(f);
-      next.add(f.id);
-      await this.redis.set(featureKey(layer, f.id), json, 'EX', ttlSeconds);
-      if (previous.get(f.id) !== json) changed.push(f);
-    }
+    const changed = await this.write(layer, features, previous, ttlSeconds);
+    const next = new Set(features.map((f) => f.id));
     if (next.size) await this.redis.sadd(indexKey(layer), ...next);
     const removed = [...previous.keys()].filter((id) => !next.has(id));
     if (removed.length) {
@@ -43,6 +57,20 @@ export class FeatureStore {
     if (changed.length) await this.publish({ type: 'upsert', layer, features: changed });
     if (removed.length) await this.publish({ type: 'remove', layer, ids: removed });
     return { upserted: changed.length, removed: removed.length };
+  }
+
+  /** Writes every feature (refreshing its TTL) and returns those that differ from `previous`. */
+  private async write(layer: LayerId, features: Feature[], previous: Map<string, string>, ttlSeconds: number) {
+    const changed: Feature[] = [];
+    // Issued together so ioredis pipelines them on the one connection.
+    await Promise.all(
+      features.map((f) => {
+        const json = JSON.stringify(f);
+        if (previous.get(f.id) !== json) changed.push(f);
+        return this.redis.set(featureKey(layer, f.id), json, 'EX', ttlSeconds);
+      }),
+    );
+    return changed;
   }
 
   private async publish(delta: LayerDelta) {
