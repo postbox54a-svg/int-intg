@@ -1,4 +1,4 @@
-# India Pulse (repo: ind-intg)
+# India Pulse (repo: int-intg)
 Real-time India-only OSINT map. TypeScript monorepo (pnpm workspaces).
 
 ## Rules
