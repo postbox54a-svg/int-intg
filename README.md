@@ -13,6 +13,6 @@ pnpm dev                    # web on :5173, ingest on :8787
 
 Checks: `pnpm typecheck`, `pnpm lint`, `pnpm test`.
 
-Layout: `apps/web` (Vite + React + MapLibre), `apps/ingest` (Fastify + WebSocket gateway, workers in `apps/ingest/workers/`), `packages/shared` (Feature type, INDIA_BBOX, layer registry), `fixtures/` (one saved real response per source), `infra/` (production compose).
+Layout: `apps/web` (Vite + React + MapLibre), `apps/ingest` (Fastify + WebSocket gateway, workers in `apps/ingest/workers/`), `packages/shared` (Feature type, INDIA_BBOX, layer registry), `fixtures/` (one sample response per source, see fixtures/README.md), `infra/` (production compose).
 
 Public data, may be delayed or incomplete. Not for navigation or emergency use. Emergencies: 112.

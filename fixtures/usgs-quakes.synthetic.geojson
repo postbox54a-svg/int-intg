@@ -1,0 +1,621 @@
+{
+ "type": "FeatureCollection",
+ "metadata": {
+  "generated": 1791040000000,
+  "url": "SYNTHETIC FIXTURE - not real events; shaped like https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_week.geojson",
+  "title": "India Pulse synthetic USGS fixture",
+  "status": 200,
+  "api": "1.14.1",
+  "count": 15
+ },
+ "features": [
+  {
+   "type": "Feature",
+   "properties": {
+    "mag": 4.6,
+    "place": "28 km ESE of Ukhrul, India",
+    "time": 1791037900000,
+    "updated": 1791038500000,
+    "tz": null,
+    "url": "https://earthquake.usgs.gov/earthquakes/eventpage/fx0001",
+    "detail": null,
+    "felt": null,
+    "cdi": null,
+    "mmi": null,
+    "alert": null,
+    "status": "reviewed",
+    "tsunami": 0,
+    "sig": 368,
+    "net": "us",
+    "code": "fx0001",
+    "ids": ",fx0001,",
+    "sources": ",us,",
+    "types": ",origin,",
+    "nst": null,
+    "dmin": 1.2,
+    "rms": 0.7,
+    "gap": 60,
+    "magType": "mb",
+    "type": "earthquake",
+    "title": "M 4.6 - 28 km ESE of Ukhrul, India"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     94.71,
+     25.12,
+     52.3
+    ]
+   },
+   "id": "fx0001"
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "mag": 3.4,
+    "place": "18 km N of Dharamshala, India",
+    "time": 1791032800000,
+    "updated": 1791033400000,
+    "tz": null,
+    "url": "https://earthquake.usgs.gov/earthquakes/eventpage/fx0002",
+    "detail": null,
+    "felt": null,
+    "cdi": null,
+    "mmi": null,
+    "alert": null,
+    "status": "reviewed",
+    "tsunami": 0,
+    "sig": 272,
+    "net": "us",
+    "code": "fx0002",
+    "ids": ",fx0002,",
+    "sources": ",us,",
+    "types": ",origin,",
+    "nst": null,
+    "dmin": 1.2,
+    "rms": 0.7,
+    "gap": 60,
+    "magType": "ml",
+    "type": "earthquake",
+    "title": "M 3.4 - 18 km N of Dharamshala, India"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     76.98,
+     32.41,
+     10.0
+    ]
+   },
+   "id": "fx0002"
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "mag": 5.2,
+    "place": "97 km S of Campbell Bay, India",
+    "time": 1791022000000,
+    "updated": 1791022600000,
+    "tz": null,
+    "url": "https://earthquake.usgs.gov/earthquakes/eventpage/fx0003",
+    "detail": null,
+    "felt": null,
+    "cdi": null,
+    "mmi": null,
+    "alert": null,
+    "status": "reviewed",
+    "tsunami": 0,
+    "sig": 416,
+    "net": "us",
+    "code": "fx0003",
+    "ids": ",fx0003,",
+    "sources": ",us,",
+    "types": ",origin,",
+    "nst": null,
+    "dmin": 1.2,
+    "rms": 0.7,
+    "gap": 60,
+    "magType": "mb",
+    "type": "earthquake",
+    "title": "M 5.2 - 97 km S of Campbell Bay, India"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     93.18,
+     7.02,
+     35.0
+    ]
+   },
+   "id": "fx0003"
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "mag": 2.9,
+    "place": "21 km NE of Bhachau, India",
+    "time": 1791015400000,
+    "updated": 1791016000000,
+    "tz": null,
+    "url": "https://earthquake.usgs.gov/earthquakes/eventpage/fx0004",
+    "detail": null,
+    "felt": null,
+    "cdi": null,
+    "mmi": null,
+    "alert": null,
+    "status": "reviewed",
+    "tsunami": 0,
+    "sig": 232,
+    "net": "us",
+    "code": "fx0004",
+    "ids": ",fx0004,",
+    "sources": ",us,",
+    "types": ",origin,",
+    "nst": null,
+    "dmin": 1.2,
+    "rms": 0.7,
+    "gap": 60,
+    "magType": "ml",
+    "type": "earthquake",
+    "title": "M 2.9 - 21 km NE of Bhachau, India"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     70.36,
+     23.48,
+     15.2
+    ]
+   },
+   "id": "fx0004"
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "mag": 3.8,
+    "place": "12 km SW of Silchar, India",
+    "time": 1791006400000,
+    "updated": 1791007000000,
+    "tz": null,
+    "url": "https://earthquake.usgs.gov/earthquakes/eventpage/fx0005",
+    "detail": null,
+    "felt": null,
+    "cdi": null,
+    "mmi": null,
+    "alert": null,
+    "status": "reviewed",
+    "tsunami": 0,
+    "sig": 304,
+    "net": "us",
+    "code": "fx0005",
+    "ids": ",fx0005,",
+    "sources": ",us,",
+    "types": ",origin,",
+    "nst": null,
+    "dmin": 1.2,
+    "rms": 0.7,
+    "gap": 60,
+    "magType": "ml",
+    "type": "earthquake",
+    "title": "M 3.8 - 12 km SW of Silchar, India"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     92.61,
+     24.83,
+     40.1
+    ]
+   },
+   "id": "fx0005"
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "mag": 4.1,
+    "place": "34 km NNE of Joshimath, India",
+    "time": 1790993200000,
+    "updated": 1790993800000,
+    "tz": null,
+    "url": "https://earthquake.usgs.gov/earthquakes/eventpage/fx0006",
+    "detail": null,
+    "felt": null,
+    "cdi": null,
+    "mmi": null,
+    "alert": null,
+    "status": "reviewed",
+    "tsunami": 0,
+    "sig": 328,
+    "net": "us",
+    "code": "fx0006",
+    "ids": ",fx0006,",
+    "sources": ",us,",
+    "types": ",origin,",
+    "nst": null,
+    "dmin": 1.2,
+    "rms": 0.7,
+    "gap": 60,
+    "magType": "mb",
+    "type": "earthquake",
+    "title": "M 4.1 - 34 km NNE of Joshimath, India"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     80.12,
+     30.44,
+     12.0
+    ]
+   },
+   "id": "fx0006"
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "mag": 3.1,
+    "place": "9 km S of Koynanagar, India",
+    "time": 1790980600000,
+    "updated": 1790981200000,
+    "tz": null,
+    "url": "https://earthquake.usgs.gov/earthquakes/eventpage/fx0007",
+    "detail": null,
+    "felt": null,
+    "cdi": null,
+    "mmi": null,
+    "alert": null,
+    "status": "reviewed",
+    "tsunami": 0,
+    "sig": 248,
+    "net": "us",
+    "code": "fx0007",
+    "ids": ",fx0007,",
+    "sources": ",us,",
+    "types": ",origin,",
+    "nst": null,
+    "dmin": 1.2,
+    "rms": 0.7,
+    "gap": 60,
+    "magType": "ml",
+    "type": "earthquake",
+    "title": "M 3.1 - 9 km S of Koynanagar, India"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     73.71,
+     17.37,
+     8.0
+    ]
+   },
+   "id": "fx0007"
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "mag": 4.4,
+    "place": "Andaman Islands, India region",
+    "time": 1790962000000,
+    "updated": 1790962600000,
+    "tz": null,
+    "url": "https://earthquake.usgs.gov/earthquakes/eventpage/fx0008",
+    "detail": null,
+    "felt": null,
+    "cdi": null,
+    "mmi": null,
+    "alert": null,
+    "status": "reviewed",
+    "tsunami": 0,
+    "sig": 352,
+    "net": "us",
+    "code": "fx0008",
+    "ids": ",fx0008,",
+    "sources": ",us,",
+    "types": ",origin,",
+    "nst": null,
+    "dmin": 1.2,
+    "rms": 0.7,
+    "gap": 60,
+    "magType": "mb",
+    "type": "earthquake",
+    "title": "M 4.4 - Andaman Islands, India region"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     94.38,
+     12.51,
+     25.6
+    ]
+   },
+   "id": "fx0008"
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "mag": 3.6,
+    "place": "22 km NW of Gangtok, India",
+    "time": 1790938000000,
+    "updated": 1790938600000,
+    "tz": null,
+    "url": "https://earthquake.usgs.gov/earthquakes/eventpage/fx0009",
+    "detail": null,
+    "felt": null,
+    "cdi": null,
+    "mmi": null,
+    "alert": null,
+    "status": "reviewed",
+    "tsunami": 0,
+    "sig": 288,
+    "net": "us",
+    "code": "fx0009",
+    "ids": ",fx0009,",
+    "sources": ",us,",
+    "types": ",origin,",
+    "nst": null,
+    "dmin": 1.2,
+    "rms": 0.7,
+    "gap": 60,
+    "magType": "ml",
+    "type": "earthquake",
+    "title": "M 3.6 - 22 km NW of Gangtok, India"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     88.33,
+     27.31,
+     18.4
+    ]
+   },
+   "id": "fx0009"
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "mag": 4.9,
+    "place": "Kashmir-Xinjiang border region",
+    "time": 1790902000000,
+    "updated": 1790902600000,
+    "tz": null,
+    "url": "https://earthquake.usgs.gov/earthquakes/eventpage/fx0010",
+    "detail": null,
+    "felt": null,
+    "cdi": null,
+    "mmi": null,
+    "alert": null,
+    "status": "reviewed",
+    "tsunami": 0,
+    "sig": 392,
+    "net": "us",
+    "code": "fx0010",
+    "ids": ",fx0010,",
+    "sources": ",us,",
+    "types": ",origin,",
+    "nst": null,
+    "dmin": 1.2,
+    "rms": 0.7,
+    "gap": 60,
+    "magType": "mb",
+    "type": "earthquake",
+    "title": "M 4.9 - Kashmir-Xinjiang border region"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     75.42,
+     35.88,
+     22.0
+    ]
+   },
+   "id": "fx0010"
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "mag": 5.6,
+    "place": "Pakistan",
+    "time": 1790890000000,
+    "updated": 1790890600000,
+    "tz": null,
+    "url": "https://earthquake.usgs.gov/earthquakes/eventpage/fx0011",
+    "detail": null,
+    "felt": null,
+    "cdi": null,
+    "mmi": null,
+    "alert": null,
+    "status": "reviewed",
+    "tsunami": 0,
+    "sig": 448,
+    "net": "us",
+    "code": "fx0011",
+    "ids": ",fx0011,",
+    "sources": ",us,",
+    "types": ",origin,",
+    "nst": null,
+    "dmin": 1.2,
+    "rms": 0.7,
+    "gap": 60,
+    "magType": "mb",
+    "type": "earthquake",
+    "title": "M 5.6 - Pakistan"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     69.15,
+     28.01,
+     33.0
+    ]
+   },
+   "id": "fx0011"
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "mag": 3.3,
+    "place": "Nepal",
+    "time": 1790866000000,
+    "updated": 1790866600000,
+    "tz": null,
+    "url": "https://earthquake.usgs.gov/earthquakes/eventpage/fx0012",
+    "detail": null,
+    "felt": null,
+    "cdi": null,
+    "mmi": null,
+    "alert": null,
+    "status": "reviewed",
+    "tsunami": 0,
+    "sig": 264,
+    "net": "us",
+    "code": "fx0012",
+    "ids": ",fx0012,",
+    "sources": ",us,",
+    "types": ",origin,",
+    "nst": null,
+    "dmin": 1.2,
+    "rms": 0.7,
+    "gap": 60,
+    "magType": "ml",
+    "type": "earthquake",
+    "title": "M 3.3 - Nepal"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.71,
+     28.23,
+     10.0
+    ]
+   },
+   "id": "fx0012"
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "mag": 6.1,
+    "place": "Off the east coast of Honshu, Japan",
+    "time": 1791037000000,
+    "updated": 1791037600000,
+    "tz": null,
+    "url": "https://earthquake.usgs.gov/earthquakes/eventpage/fx9001",
+    "detail": null,
+    "felt": null,
+    "cdi": null,
+    "mmi": null,
+    "alert": null,
+    "status": "reviewed",
+    "tsunami": 0,
+    "sig": 488,
+    "net": "us",
+    "code": "fx9001",
+    "ids": ",fx9001,",
+    "sources": ",us,",
+    "types": ",origin,",
+    "nst": null,
+    "dmin": 1.2,
+    "rms": 0.7,
+    "gap": 60,
+    "magType": "mb",
+    "type": "earthquake",
+    "title": "M 6.1 - Off the east coast of Honshu, Japan"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     142.37,
+     38.29,
+     29.0
+    ]
+   },
+   "id": "fx9001"
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "mag": 5.0,
+    "place": "Valparaiso, Chile",
+    "time": 1791028000000,
+    "updated": 1791028600000,
+    "tz": null,
+    "url": "https://earthquake.usgs.gov/earthquakes/eventpage/fx9002",
+    "detail": null,
+    "felt": null,
+    "cdi": null,
+    "mmi": null,
+    "alert": null,
+    "status": "reviewed",
+    "tsunami": 0,
+    "sig": 400,
+    "net": "us",
+    "code": "fx9002",
+    "ids": ",fx9002,",
+    "sources": ",us,",
+    "types": ",origin,",
+    "nst": null,
+    "dmin": 1.2,
+    "rms": 0.7,
+    "gap": 60,
+    "magType": "mb",
+    "type": "earthquake",
+    "title": "M 5.0 - Valparaiso, Chile"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -71.6,
+     -33.1,
+     40.0
+    ]
+   },
+   "id": "fx9002"
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "mag": 4.7,
+    "place": "Southern Iran",
+    "time": 1791016000000,
+    "updated": 1791016600000,
+    "tz": null,
+    "url": "https://earthquake.usgs.gov/earthquakes/eventpage/fx9003",
+    "detail": null,
+    "felt": null,
+    "cdi": null,
+    "mmi": null,
+    "alert": null,
+    "status": "reviewed",
+    "tsunami": 0,
+    "sig": 376,
+    "net": "us",
+    "code": "fx9003",
+    "ids": ",fx9003,",
+    "sources": ",us,",
+    "types": ",origin,",
+    "nst": null,
+    "dmin": 1.2,
+    "rms": 0.7,
+    "gap": 60,
+    "magType": "mb",
+    "type": "earthquake",
+    "title": "M 4.7 - Southern Iran"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     56.2,
+     27.1,
+     10.0
+    ]
+   },
+   "id": "fx9003"
+  }
+ ],
+ "bbox": [
+  -71.6,
+  -33.1,
+  8,
+  142.37,
+  38.29,
+  52.3
+ ]
+}

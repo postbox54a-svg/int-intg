@@ -3,6 +3,7 @@ import { LAYER_IDS, type LayerId } from '@ind-intg/shared';
 import { IstClock } from './components/IstClock';
 import { LayerPanel } from './components/LayerPanel';
 import { MapView, type Projection } from './map/MapView';
+import { useLiveFeatures } from './live';
 import { useWorkerStatuses } from './status';
 
 export const DISCLAIMER =
@@ -14,8 +15,9 @@ export function App() {
   const [projection, setProjection] = useState<Projection>('mercator');
   const [fallback, setFallback] = useState(false);
   const statuses = useWorkerStatuses();
-  // Filled by the WebSocket gateway from Phase 2 on.
+  const { data, connected } = useLiveFeatures(enabled);
   const counts: Partial<Record<LayerId, number>> = {};
+  for (const id of LAYER_IDS) counts[id] = data[id]?.length ?? 0;
 
   const toggleLayer = (id: LayerId) =>
     setEnabled((prev) => {
@@ -27,7 +29,7 @@ export function App() {
 
   return (
     <div className="app">
-      <MapView projection={projection} onBasemapFallback={setFallback} />
+      <MapView projection={projection} data={data} enabled={enabled} onBasemapFallback={setFallback} />
       <LayerPanel
         open={panelOpen}
         onToggleOpen={() => setPanelOpen((o) => !o)}
@@ -35,6 +37,7 @@ export function App() {
         onToggleLayer={toggleLayer}
         counts={counts}
         statuses={statuses}
+        connected={connected}
       />
       <div className="top-right">
         <IstClock />

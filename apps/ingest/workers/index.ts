@@ -1,6 +1,8 @@
-import type { Worker } from '../src/worker.js';
+import type { FeatureStore } from '../src/store.js';
+import type { Logger, Worker } from '../src/worker.js';
+import { createQuakesWorker } from './quakes.js';
 
 /** One worker module per source lives in this folder; register them here as phases land. */
-export function createWorkers(): Worker[] {
-  return [];
+export function createWorkers(store: FeatureStore, log: Logger): Worker[] {
+  return [createQuakesWorker(store, log)];
 }
