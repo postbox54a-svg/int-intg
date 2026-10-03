@@ -24,7 +24,7 @@ Exit criteria for every phase: `pnpm typecheck`, `pnpm lint`, `pnpm test` pass; 
   credentials) fallback behind one interface; poll 10 s, INDIA_BBOX, expire 60 s, backoff on 429; filter military
   (no callsign / known military hex ranges). deck.gl IconLayer rotated by heading, interpolated; popup (callsign,
   altitude, speed, squawk).
-- [ ] **Phase 4 – Alerts** (`phase-4-alerts`): workers/alerts.ts, NDMA SACHET RSS every 5 min → CAP 1.2 XML (event,
+- [x] **Phase 4 – Alerts** (`phase-4-alerts`): workers/alerts.ts, NDMA SACHET RSS every 5 min → CAP 1.2 XML (event,
   severity, area polygon/district, sender, expiry). Filled polygons by severity; district-only alerts joined to
   datameet districts GeoJSON. Drop expired.
 - [ ] **Phase 5 – News** (`phase-5-news`): workers/news.ts, GDELT DOC 2.0 artlist + configurable Indian RSS feeds;
@@ -40,7 +40,7 @@ Exit criteria for every phase: `pnpm typecheck`, `pnpm lint`, `pnpm test` pass; 
   Bengaluru.
 
 ## Next step
-Phase 4 – Alerts, on branch `phase-4-alerts`.
+Phase 5 – News, on branch `phase-5-news`.
 
 ## Notes / deviations
 - Phase 0 was run in a local Windows session, not the cloud: Redis, Docker and gh were not installed. The
@@ -89,3 +89,18 @@ Phase 4 – Alerts, on branch `phase-4-alerts`.
 - Phase 3 was **not verified with real data**: api.adsb.lol, opensky-network.org and auth.opensky-network.org are
   blocked in the cloud. Against the real URL, adsb.lol failed, the OpenSky fixture served as the fallback, and
   10 aircraft were synced. The screenshot uses the adsb.lol fixture.
+- Phase 4: `workers/alerts.ts` reads the SACHET RSS feed every 5 min and fetches each linked CAP 1.2 message once,
+  caching it while it stays in the feed. It uses the English info block when there is one. Polygons and circles
+  become the area. Areas without geometry are joined by name to `apps/ingest/data/districts-2011.geojson`
+  (datameet `website/docs/data/geojson/dists11.geojson`, Census 2011, simplified with mapshaper `-simplify 2% keep-shapes`,
+  450 KB). A district name shared by two states is used only when a state is named in the area or headline.
+  Districts created after 2011 stay unmatched (logged). Dropped: expired, non-Actual, Cancel, and alerts superseded
+  through CAP `references`. The area travels in `props.geometry` (MultiPolygon); `lat`/`lon` is its bbox centre,
+  which is what INDIA_BBOX filters on. Per-feature TTL: until `expires`, capped at the layer's 24 h.
+  `FeatureStore.sync`/`merge` now take a TTL function.
+- Phase 4 web: fills and outlines coloured by severity (Extreme > Severe > Moderate > Minor; sort key puts the most
+  severe on top), drawn under quake circles and the SOI line. Popup: event, severity, area, sender, IST validity,
+  headline, advice, and whether the map area is the district boundaries.
+- Phase 4 was **not verified with real data**: sachet.ndma.gov.in is blocked in the cloud (403, worker backs off
+  5 min). The real SACHET RSS and CAP layout (link format, areaDesc wording, geocodes) has not been seen. Check
+  `parseRss` and the district matching against a live feed first, before relying on this layer.

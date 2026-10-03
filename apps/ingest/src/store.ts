@@ -3,6 +3,9 @@ import type { Redis } from 'ioredis';
 
 const indexKey = (layer: LayerId) => `idx:${layer}`;
 
+/** Seconds; or per feature (e.g. alerts that expire at their own time). */
+export type Ttl = number | ((f: Feature) => number);
+
 /**
  * Features live in Redis as one key per feature (`feat:<layer>:<id>`, with TTL) plus a per-layer id set.
  * Workers write here; every change is published on the layer channel for the gateway.
@@ -28,7 +31,7 @@ export class FeatureStore {
    * Adds or refreshes features without removing absent ones: for sources where a missed poll should not drop a
    * feature (flights). Features expire through their TTL; expired ids are published as a `remove` delta.
    */
-  async merge(layer: LayerId, features: Feature[], ttlSeconds: number): Promise<{ upserted: number; removed: number }> {
+  async merge(layer: LayerId, features: Feature[], ttlSeconds: Ttl): Promise<{ upserted: number; removed: number }> {
     const { features: current, expired } = await this.load(layer);
     const previous = new Map(current.map((f) => [f.id, JSON.stringify(f)]));
     const changed = await this.write(layer, features, previous, ttlSeconds);
@@ -44,7 +47,7 @@ export class FeatureStore {
    * Replaces a layer with the latest full result of a polled source: refreshes TTLs, publishes an `upsert`
    * delta with new or changed features and a `remove` delta with features no longer in the source.
    */
-  async sync(layer: LayerId, features: Feature[], ttlSeconds: number): Promise<{ upserted: number; removed: number }> {
+  async sync(layer: LayerId, features: Feature[], ttlSeconds: Ttl): Promise<{ upserted: number; removed: number }> {
     const previous = new Map((await this.snapshot(layer)).map((f) => [f.id, JSON.stringify(f)]));
     const changed = await this.write(layer, features, previous, ttlSeconds);
     const next = new Set(features.map((f) => f.id));
@@ -60,14 +63,15 @@ export class FeatureStore {
   }
 
   /** Writes every feature (refreshing its TTL) and returns those that differ from `previous`. */
-  private async write(layer: LayerId, features: Feature[], previous: Map<string, string>, ttlSeconds: number) {
+  private async write(layer: LayerId, features: Feature[], previous: Map<string, string>, ttlSeconds: Ttl) {
     const changed: Feature[] = [];
     // Issued together so ioredis pipelines them on the one connection.
     await Promise.all(
       features.map((f) => {
         const json = JSON.stringify(f);
         if (previous.get(f.id) !== json) changed.push(f);
-        return this.redis.set(featureKey(layer, f.id), json, 'EX', ttlSeconds);
+        const ttl = typeof ttlSeconds === 'number' ? ttlSeconds : ttlSeconds(f);
+        return this.redis.set(featureKey(layer, f.id), json, 'EX', Math.max(1, Math.round(ttl)));
       }),
     );
     return changed;

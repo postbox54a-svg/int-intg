@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- SYNTHETIC FIXTURE: invented alert in CAP 1.2 format, not a real warning. -->
+<alert xmlns="urn:oasis:names:tc:emergency:cap:1.2">
+  <identifier>FX-SACHET-0001</identifier>
+  <sender>fixture@example.invalid</sender>
+  <sent>2026-10-03T07:30:00+05:30</sent>
+  <status>Actual</status>
+  <msgType>Alert</msgType>
+  <scope>Public</scope>
+  
+  <info>
+    <language>en-IN</language>
+    <category>Met</category>
+    <event>Heavy Rainfall</event>
+    <urgency>Expected</urgency>
+    <severity>Severe</severity>
+    <certainty>Likely</certainty>
+    <effective>2026-10-03T08:00:00+05:30</effective>
+    <expires>2027-10-03T08:00:00+05:30</expires>
+    <senderName>IMD Thiruvananthapuram (fixture)</senderName>
+    <headline>Heavy to very heavy rainfall likely over central Kerala coast</headline>
+    <description>Heavy to very heavy rainfall likely over central Kerala coast (synthetic fixture).</description>
+    <instruction>Follow advice from local authorities. Emergencies: 112.</instruction>
+    <area>
+      <areaDesc>Ernakulam, Thrissur, Malappuram coastal belt</areaDesc><polygon>9.90,76.20 10.60,76.00 11.20,75.70 11.10,76.30 10.20,76.60 9.90,76.20</polygon>
+    </area>
+  </info>
+  <info>
+    <language>hi-IN</language>
+    <category>Met</category>
+    <event>भारी वर्षा</event>
+    <urgency>Expected</urgency>
+    <severity>Severe</severity>
+    <certainty>Likely</certainty>
+    <effective>2026-10-03T08:00:00+05:30</effective>
+    <expires>2027-10-03T08:00:00+05:30</expires>
+    <senderName>IMD (fixture)</senderName>
+    <headline>मध्य केरल तट पर भारी वर्षा की संभावना</headline>
+    <description>मध्य केरल तट पर भारी वर्षा की संभावना (synthetic fixture).</description>
+    <instruction>Follow advice from local authorities. Emergencies: 112.</instruction>
+    <area>
+      <areaDesc>केरल</areaDesc><polygon>9.90,76.20 10.60,76.00 11.20,75.70 11.10,76.30 10.20,76.60 9.90,76.20</polygon>
+    </area>
+  </info>
+</alert>

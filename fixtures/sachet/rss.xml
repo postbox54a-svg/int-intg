@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- SYNTHETIC FIXTURE shaped like the SACHET RSS feed; links are relative to this file. -->
+<rss version="2.0">
+  <channel>
+    <title>SACHET (synthetic fixture)</title>
+    <link>https://sachet.ndma.gov.in/</link>
+    <description>Synthetic CAP alert feed for tests</description>
+    <item>
+      <title>Synthetic fixture cap-polygon.xml</title>
+      <link>cap-polygon.xml</link>
+      <pubDate>Sat, 03 Oct 2026 09:00:00 +0530</pubDate>
+    </item>
+    <item>
+      <title>Synthetic fixture cap-districts.xml</title>
+      <link>cap-districts.xml</link>
+      <pubDate>Sat, 03 Oct 2026 09:00:00 +0530</pubDate>
+    </item>
+    <item>
+      <title>Synthetic fixture cap-ambiguous.xml</title>
+      <link>cap-ambiguous.xml</link>
+      <pubDate>Sat, 03 Oct 2026 09:00:00 +0530</pubDate>
+    </item>
+    <item>
+      <title>Synthetic fixture cap-circle.xml</title>
+      <link>cap-circle.xml</link>
+      <pubDate>Sat, 03 Oct 2026 09:00:00 +0530</pubDate>
+    </item>
+    <item>
+      <title>Synthetic fixture cap-unmatched.xml</title>
+      <link>cap-unmatched.xml</link>
+      <pubDate>Sat, 03 Oct 2026 09:00:00 +0530</pubDate>
+    </item>
+    <item>
+      <title>Synthetic fixture cap-expired.xml</title>
+      <link>cap-expired.xml</link>
+      <pubDate>Sat, 03 Oct 2026 09:00:00 +0530</pubDate>
+    </item>
+    <item>
+      <title>Synthetic fixture cap-old.xml</title>
+      <link>cap-old.xml</link>
+      <pubDate>Sat, 03 Oct 2026 09:00:00 +0530</pubDate>
+    </item>
+    <item>
+      <title>Synthetic fixture cap-update.xml</title>
+      <link>cap-update.xml</link>
+      <pubDate>Sat, 03 Oct 2026 09:00:00 +0530</pubDate>
+    </item>
+    <item>
+      <title>Synthetic fixture cap-exercise.xml</title>
+      <link>cap-exercise.xml</link>
+      <pubDate>Sat, 03 Oct 2026 09:00:00 +0530</pubDate>
+    </item>
+  </channel>
+</rss>
