@@ -1,4 +1,4 @@
-# India Pulse (`ind-intg`)
+# India Pulse (`int-intg`)
 
 Real-time, India-only open-source intelligence map. See [CLAUDE.md](CLAUDE.md) for rules and [PLAN.md](PLAN.md) for progress.
 
