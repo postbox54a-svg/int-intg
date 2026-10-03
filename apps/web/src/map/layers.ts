@@ -154,6 +154,71 @@ export const NEWS: LayerRenderer = {
   link: (p) => (typeof p.url === 'string' && /^https?:\/\//.test(p.url) ? p.url : null),
 };
 
+/** Ship display categories (from the AIS type code, set by the ingest worker) and their colours. */
+export const SHIP_COLOURS: [category: string, label: string, colour: string][] = [
+  ['cargo', 'Cargo', '#4db6ac'],
+  ['tanker', 'Tanker', '#e57373'],
+  ['passenger', 'Passenger', '#64b5f6'],
+  ['fishing', 'Fishing', '#ffb74d'],
+  ['tug', 'Tug / towing', '#a1887f'],
+  ['highspeed', 'High-speed craft', '#f06292'],
+  ['pleasure', 'Sailing / pleasure', '#9575cd'],
+  ['special', 'Pilot / SAR / special', '#fff176'],
+  ['other', 'Other / unknown', '#90a4ae'],
+];
+
+const NAV_STATUS: Record<number, string> = {
+  0: 'Under way (engine)',
+  1: 'At anchor',
+  2: 'Not under command',
+  3: 'Restricted manoeuvrability',
+  5: 'Moored',
+  6: 'Aground',
+  7: 'Fishing',
+  8: 'Under way (sail)',
+};
+
+export const SHIPS: LayerRenderer = {
+  layers: [
+    {
+      id: 'ships-circles',
+      type: 'circle',
+      source: 'ships',
+      paint: {
+        'circle-color': ['match', ['get', 'category'], ...SHIP_COLOURS.flatMap(([c, , colour]) => [c, colour]), '#90a4ae'] as never,
+        'circle-radius': ['interpolate', ['linear'], ['zoom'], 4, 3, 10, 6],
+        'circle-stroke-color': '#0b0f14',
+        'circle-stroke-width': 1,
+      },
+    },
+  ],
+  popup: (p) => {
+    const category = SHIP_COLOURS.find(([c]) => c === p.category)?.[1] ?? 'Other / unknown';
+    const rows: [string, string][] = [
+      ['Name', typeof p.name === 'string' && p.name ? p.name : 'Unknown'],
+      ['MMSI', String(p.mmsi ?? 'n/a')],
+      ['Type', typeof p.shipType === 'number' ? `${category} (${p.shipType})` : category],
+      ['Speed', typeof p.sog === 'number' ? `${p.sog.toFixed(1)} kn` : 'n/a'],
+      ['Course', typeof p.cog === 'number' ? `${Math.round(p.cog)}°` : 'n/a'],
+    ];
+    if (typeof p.navStatus === 'number' && NAV_STATUS[p.navStatus]) rows.push(['Status', NAV_STATUS[p.navStatus]!]);
+    if (typeof p.destination === 'string' && p.destination) rows.push(['Destination', p.destination]);
+    if (typeof p.callsign === 'string' && p.callsign) rows.push(['Call sign', p.callsign]);
+    rows.push(['Last seen', istOrNa(p.ts)]);
+    return rows;
+  },
+};
+
+/** Major ports labelled when the ships layer is on. */
+export const PORTS: { name: string; lon: number; lat: number }[] = [
+  { name: 'JNPT', lon: 72.95, lat: 18.95 },
+  { name: 'Mundra', lon: 69.7, lat: 22.74 },
+  { name: 'Chennai', lon: 80.3, lat: 13.1 },
+  { name: 'Visakhapatnam', lon: 83.29, lat: 17.69 },
+  { name: 'Kochi', lon: 76.26, lat: 9.97 },
+  { name: 'Kolkata', lon: 88.31, lat: 22.55 },
+];
+
 /** Renderers for MapLibre-drawn layers that have landed; flights are drawn with deck.gl (see flights.ts). */
 // Order matters: earlier entries draw underneath (alert areas below quake circles).
-export const RENDERERS: Partial<Record<LayerId, LayerRenderer>> = { alerts: ALERTS, quakes: QUAKES, news: NEWS };
+export const RENDERERS: Partial<Record<LayerId, LayerRenderer>> = { alerts: ALERTS, ships: SHIPS, quakes: QUAKES, news: NEWS };

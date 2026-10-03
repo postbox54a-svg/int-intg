@@ -1,4 +1,5 @@
 import { LAYERS, type LayerId } from '@ind-intg/shared';
+import { SHIP_COLOURS } from '../map/layers';
 import type { WorkerStatus } from '../status';
 
 interface Props {
@@ -42,6 +43,15 @@ export function LayerPanel({ open, onToggleOpen, enabled, onToggleLayer, counts,
                     </span>
                   </label>
                   {note && <div className="layer-note">{note}</div>}
+                  {l.id === 'ships' && enabled.has('ships') && (
+                    <ul className="legend" aria-label="Ship types">
+                      {SHIP_COLOURS.map(([c, label, colour]) => (
+                        <li key={c}>
+                          <span className="swatch" style={{ background: colour }} /> {label}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
                 </li>
               );
             })}
