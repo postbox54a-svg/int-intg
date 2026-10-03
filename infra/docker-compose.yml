@@ -1,0 +1,14 @@
+# Production services. For dev/tests in cloud sessions use `service redis-server start` instead.
+# PostGIS is added in Phase 7, ingest + Caddy in Phase 8.
+services:
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    command: ["redis-server", "--save", "", "--appendonly", "no", "--maxmemory", "512mb", "--maxmemory-policy", "volatile-ttl"]
+    ports:
+      - "127.0.0.1:6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
