@@ -46,8 +46,14 @@ Phase 1 – Map shell, on branch `phase-1-map-shell`.
 - Phase 0 was run in a local Windows session, not the cloud: Redis, Docker and gh were not installed. The
   SessionStart hook works even when the `service` command is missing. Ingest starts without Redis, logs one
   warning and keeps reconnecting.
-- Phase 0 is committed locally on `phase-0-scaffold`. It has not been pushed and no PR exists yet, because the
-  repo has no GitHub remote.
+- Phase 0 was verified in the cloud. The SessionStart hook runs (pnpm install, then Redis up), and `pnpm dev` logs
+  "redis connected" with `/health` reporting `redis: ready`. `main` is an empty root commit, and Phase 0 is merged
+  in through its PR.
+- Cloud network (environment "Default"), 2026-10-03: only raw.githubusercontent.com (datameet) and npm are
+  reachable. The proxy blocks these with 403: tiles.openfreemap.org, earthquake.usgs.gov, api.adsb.lol,
+  opensky-network.org, auth.opensky-network.org, sachet.ndma.gov.in, api.gdeltproject.org, stream.aisstream.io,
+  download.geonames.org. Until they are allowlisted in the environment settings, use fixtures for those
+  sources.
 - Dependencies are pinned to stable majors (Vite 6, Vitest 2, ESLint 9, React 18). MapLibre v5 and deck.gl
   are added in Phase 1.
 - Shared and ingest code run straight from TS source (`tsx`, with Vite resolving the workspace). There is no
