@@ -1,5 +1,5 @@
 import { formatIST, type Feature, type LayerId } from '@ind-intg/shared';
-import type { FeatureCollection, Point } from 'geojson';
+import type { FeatureCollection, Geometry, MultiPolygon, Point } from 'geojson';
 import type { LayerSpecification } from 'maplibre-gl';
 
 type FC = FeatureCollection<Point>;
@@ -18,6 +18,8 @@ export function toFeatureCollection(features: Feature[] = []): FC {
 export interface LayerRenderer {
   /** Map layers drawn from the GeoJSON source named after the layer id. */
   layers: LayerSpecification[];
+  /** Features -> source data; defaults to points at each feature's lat/lon. */
+  toGeoJSON?(features: Feature[]): FeatureCollection<Geometry>;
   /** Rows for the click popup: [label, value]. */
   popup(props: Record<string, unknown>): [string, string][];
   link?(props: Record<string, unknown>): string | null;
@@ -47,5 +49,65 @@ export const QUAKES: LayerRenderer = {
   link: (p) => (typeof p.url === 'string' && p.url.startsWith('https://') ? p.url : null),
 };
 
-/** Renderers for layers that have landed; the rest arrive in later phases. */
-export const RENDERERS: Partial<Record<LayerId, LayerRenderer>> = { quakes: QUAKES };
+/** CAP severities, most severe first, with their fill colours. */
+export const SEVERITY_COLOURS: [string, string][] = [
+  ['Extreme', '#d32f2f'],
+  ['Severe', '#f57c00'],
+  ['Moderate', '#fbc02d'],
+  ['Minor', '#4fc3f7'],
+];
+const UNKNOWN_SEVERITY = '#8b98a5';
+const severityColour: unknown[] = ['match', ['get', 'severity'], ...SEVERITY_COLOURS.flat(), UNKNOWN_SEVERITY];
+// Higher sort key draws on top, so the most severe alert wins where areas overlap.
+const severityRank: unknown[] = ['match', ['get', 'severity'], ...SEVERITY_COLOURS.flatMap(([s], i) => [s, SEVERITY_COLOURS.length - i]), 0];
+
+/** Alerts carry their area in props.geometry (CAP polygon or joined district boundaries). */
+export function alertsToGeoJSON(features: Feature[] = []): FeatureCollection<MultiPolygon> {
+  return {
+    type: 'FeatureCollection',
+    features: features.flatMap((f) => {
+      const { geometry, ...props } = f.props as { geometry?: MultiPolygon };
+      return geometry?.type === 'MultiPolygon' ? [{ type: 'Feature' as const, geometry, properties: { ...props, id: f.id, ts: f.ts } }] : [];
+    }),
+  };
+}
+
+const istOrNa = (v: unknown) => (typeof v === 'number' ? `${formatIST(v)} IST` : 'n/a');
+
+export const ALERTS: LayerRenderer = {
+  toGeoJSON: alertsToGeoJSON,
+  layers: [
+    {
+      id: 'alerts-fill',
+      type: 'fill',
+      source: 'alerts',
+      layout: { 'fill-sort-key': severityRank as never },
+      paint: { 'fill-color': severityColour as never, 'fill-opacity': 0.3 },
+    },
+    {
+      id: 'alerts-outline',
+      type: 'line',
+      source: 'alerts',
+      layout: { 'line-sort-key': severityRank as never },
+      paint: { 'line-color': severityColour as never, 'line-width': 1.5, 'line-opacity': 0.9 },
+    },
+  ],
+  popup: (p) => {
+    const rows: [string, string][] = [
+      ['Event', typeof p.event === 'string' ? p.event : 'Alert'],
+      ['Severity', [p.severity, p.urgency, p.certainty].filter((v) => typeof v === 'string').join(' · ') || 'n/a'],
+      ['Area', typeof p.areaDesc === 'string' && p.areaDesc ? p.areaDesc : 'n/a'],
+      ['Issued by', typeof p.sender === 'string' ? p.sender : 'n/a'],
+      ['From', istOrNa(p.effective)],
+      ['Until', istOrNa(p.expires)],
+    ];
+    if (typeof p.headline === 'string') rows.push(['Headline', p.headline]);
+    if (typeof p.instruction === 'string') rows.push(['Advice', p.instruction]);
+    if (p.geometrySource === 'district') rows.push(['Map area', 'District boundaries (Census 2011)']);
+    return rows;
+  },
+};
+
+/** Renderers for MapLibre-drawn layers that have landed; flights are drawn with deck.gl (see flights.ts). */
+// Order matters: earlier entries draw underneath (alert areas below quake circles).
+export const RENDERERS: Partial<Record<LayerId, LayerRenderer>> = { alerts: ALERTS, quakes: QUAKES };

@@ -3,7 +3,7 @@ import type { LayerSpecification, StyleSpecification } from 'maplibre-gl';
 export const OPENFREEMAP_STYLE_URL = 'https://tiles.openfreemap.org/styles/dark';
 export const SOI_BOUNDARY_URL = '/geo/india-soi.geojson';
 export const SOI_ATTRIBUTION =
-  'Boundary: <a href="https://github.com/datameet/maps" target="_blank" rel="noopener">Survey of India via DataMeet</a> (CC BY 4.0)';
+  'Boundaries: <a href="https://github.com/datameet/maps" target="_blank" rel="noopener">Survey of India, Census 2011 districts via DataMeet</a> (CC BY 4.0)';
 
 export const INDIA_CENTER: [number, number] = [80.5, 22.5];
 export const INDIA_ZOOM = 4.2;

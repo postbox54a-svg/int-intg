@@ -77,15 +77,15 @@ export function MapView({ projection, data, enabled, onBasemapFallback }: Props)
         for (const layer of soiLayers(fallback)) m.addLayer(layer);
         // MapLibre data layers go under the SOI line so the official boundary stays on top.
         for (const [id, renderer] of renderers) {
-          m.addSource(id, { type: 'geojson', data: toFeatureCollection() });
+          m.addSource(id, { type: 'geojson', data: (renderer.toGeoJSON ?? toFeatureCollection)([]) });
           for (const layer of renderer.layers) {
             m.addLayer(layer, 'soi-boundary-casing');
             m.on('mouseenter', layer.id, () => (m.getCanvas().style.cursor = 'pointer'));
             m.on('mouseleave', layer.id, () => (m.getCanvas().style.cursor = ''));
             m.on('click', layer.id, (e) => {
               const f = e.features?.[0];
-              if (!f || f.geometry.type !== 'Point') return;
-              const at = f.geometry.coordinates as [number, number];
+              if (!f) return;
+              const at = f.geometry.type === 'Point' ? (f.geometry.coordinates as [number, number]) : e.lngLat;
               openPopup.current(id, at, popupContent(renderer.popup(f.properties), renderer.link?.(f.properties)));
             });
           }
@@ -120,7 +120,7 @@ export function MapView({ projection, data, enabled, onBasemapFallback }: Props)
   useEffect(() => {
     if (!map) return;
     for (const [id, renderer] of renderers) {
-      map.getSource<GeoJSONSource>(id)?.setData(toFeatureCollection(data[id]));
+      map.getSource<GeoJSONSource>(id)?.setData((renderer.toGeoJSON ?? toFeatureCollection)(data[id] ?? []));
       for (const layer of renderer.layers) map.setLayoutProperty(layer.id, 'visibility', enabled.has(id) ? 'visible' : 'none');
     }
     if (popup.current && !enabled.has(popup.current.layer)) {

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- SYNTHETIC FIXTURE: invented alert in CAP 1.2 format, not a real warning. -->
+<alert xmlns="urn:oasis:names:tc:emergency:cap:1.2">
+  <identifier>FX-SACHET-0009</identifier>
+  <sender>fixture@example.invalid</sender>
+  <sent>2026-10-03T06:00:00+05:30</sent>
+  <status>Exercise</status>
+  <msgType>Alert</msgType>
+  <scope>Public</scope>
+  
+  <info>
+    <language>en-IN</language>
+    <category>Met</category>
+    <event>Test</event>
+    <urgency>Expected</urgency>
+    <severity>Minor</severity>
+    <certainty>Likely</certainty>
+    <effective>2026-10-03T08:00:00+05:30</effective>
+    <expires>2027-10-03T08:00:00+05:30</expires>
+    <senderName>NDMA (fixture)</senderName>
+    <headline>Exercise message</headline>
+    <description>Exercise message (synthetic fixture).</description>
+    <instruction>Follow advice from local authorities. Emergencies: 112.</instruction>
+    <area>
+      <areaDesc>Delhi</areaDesc>
+    </area>
+  </info>
+</alert>
