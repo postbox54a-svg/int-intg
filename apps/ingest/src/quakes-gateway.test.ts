@@ -147,3 +147,19 @@ describe('Gateway', () => {
     expect(gw.size).toBe(0);
   });
 });
+
+describe('FeatureStore.merge', () => {
+  it('keeps absent features until their TTL expires, then publishes a remove', async () => {
+    const { redis, kv, published } = fakeRedis();
+    const store = new FeatureStore(redis);
+    const plane = (id: string): Feature => ({ id, layer: 'flights', lat: 20, lon: 80, ts: 1, props: {} });
+
+    expect(await store.merge('flights', [plane('a'), plane('b')], 60)).toEqual({ upserted: 2, removed: 0 });
+    expect(await store.merge('flights', [plane('a')], 60)).toEqual({ upserted: 0, removed: 0 });
+    expect((await store.snapshot('flights')).map((f) => f.id).sort()).toEqual(['a', 'b']);
+
+    kv.delete('feat:flights:b'); // b's TTL ran out
+    expect(await store.merge('flights', [plane('a')], 60)).toEqual({ upserted: 0, removed: 1 });
+    expect(published.at(-1)!.msg).toEqual({ type: 'remove', layer: 'flights', ids: ['b'] });
+  });
+});

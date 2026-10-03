@@ -20,7 +20,7 @@ Exit criteria for every phase: `pnpm typecheck`, `pnpm lint`, `pnpm test` pass; 
 - [x] **Phase 2 – Earthquakes + gateway** (`phase-2-earthquakes`): workers/quakes.ts polls USGS GeoJSON every 60 s →
   INDIA_BBOX → Feature → Redis (TTL) + publish `quakes`. WebSocket gateway (snapshot on subscribe, then deltas,
   per-layer subscriptions). Web: circles sized by magnitude, popup (place, mag, depth, IST time). Fixture test.
-- [ ] **Phase 3 – Flights** (`phase-3-flights`): workers/flights.ts, adsb.lol primary, OpenSky (OAuth2 client
+- [x] **Phase 3 – Flights** (`phase-3-flights`): workers/flights.ts, adsb.lol primary, OpenSky (OAuth2 client
   credentials) fallback behind one interface; poll 10 s, INDIA_BBOX, expire 60 s, backoff on 429; filter military
   (no callsign / known military hex ranges). deck.gl IconLayer rotated by heading, interpolated; popup (callsign,
   altitude, speed, squawk).
@@ -40,7 +40,7 @@ Exit criteria for every phase: `pnpm typecheck`, `pnpm lint`, `pnpm test` pass; 
   Bengaluru.
 
 ## Next step
-Phase 3 – Flights, on branch `phase-3-flights`.
+Phase 4 – Alerts, on branch `phase-4-alerts`.
 
 ## Notes / deviations
 - Phase 0 was run in a local Windows session, not the cloud: Redis, Docker and gh were not installed. The
@@ -75,3 +75,17 @@ Phase 3 – Flights, on branch `phase-3-flights`.
 - Phase 2 was **not verified with real data**: earthquake.usgs.gov is blocked in the cloud. Against the real URL the
   worker logs the 403 and backs off. The screenshot uses `fixtures/usgs-quakes.synthetic.geojson` (invented events)
   via a `file://` USGS_FEED_URL. To check with real data, run `pnpm dev` locally without USGS_FEED_URL.
+- Phase 3: `workers/flights.ts` has a `FlightSource` that tries providers in order (adsb.lol, then OpenSky if
+  OPENSKY_CLIENT_ID and OPENSKY_CLIENT_SECRET are set). A provider that returns 429 cools down (Retry-After, otherwise
+  exponential backoff) while the next one serves. adsb.lol is queried at 250 NM points on a grid covering INDIA_BBOX
+  (`coverGrid`: 34 requests per 10 s poll, 4 at a time, merged by hex). If adsb.lol rate-limits that in production,
+  lengthen the poll or drop sea-only cells. `FeatureStore.merge` keeps aircraft that are missing from one poll until
+  their 60 s TTL ends, then publishes a remove. Military filter: no or blank callsign, `dbFlags` bit 0, or a known
+  military hex block (`MILITARY_HEX_RANGES`). The hex list is partial: India's military block is not published.
+- Phase 3 web: a deck.gl IconLayer in MapboxOverlay (interleaved), rotated by track. Positions are dead-reckoned from
+  the last report (capped at 30 s) and redrawn every 100 ms. Emergency squawks are red and grounded aircraft grey.
+  The overlay is recreated when the projection changes, and the layer uses `cullMode: 'none'`; without these the
+  icons don't render on the globe.
+- Phase 3 was **not verified with real data**: api.adsb.lol, opensky-network.org and auth.opensky-network.org are
+  blocked in the cloud. Against the real URL, adsb.lol failed, the OpenSky fixture served as the fallback, and
+  10 aircraft were synced. The screenshot uses the adsb.lol fixture.
