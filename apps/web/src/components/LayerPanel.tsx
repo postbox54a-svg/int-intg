@@ -8,6 +8,7 @@ interface Props {
   onToggleLayer: (id: LayerId) => void;
   counts: Partial<Record<LayerId, number>>;
   statuses: Partial<Record<LayerId, WorkerStatus>>;
+  connected?: boolean;
 }
 
 function statusNote(s: WorkerStatus | undefined): string | null {
@@ -17,7 +18,7 @@ function statusNote(s: WorkerStatus | undefined): string | null {
   return null;
 }
 
-export function LayerPanel({ open, onToggleOpen, enabled, onToggleLayer, counts, statuses }: Props) {
+export function LayerPanel({ open, onToggleOpen, enabled, onToggleLayer, counts, statuses, connected = false }: Props) {
   return (
     <aside className={`panel ${open ? 'open' : 'closed'}`} aria-label="Layers">
       <button className="panel-toggle" onClick={onToggleOpen} aria-expanded={open} title={open ? 'Hide layers' : 'Show layers'}>
@@ -26,6 +27,7 @@ export function LayerPanel({ open, onToggleOpen, enabled, onToggleLayer, counts,
       {open && (
         <div className="panel-body">
           <h1>India Pulse</h1>
+          <div className={`live ${connected ? 'on' : 'off'}`}>{connected ? 'Live' : 'Connecting…'}</div>
           <ul className="layers">
             {LAYERS.map((l) => {
               const note = statusNote(statuses[l.id]);

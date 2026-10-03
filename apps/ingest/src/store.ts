@@ -1,0 +1,51 @@
+import { channelFor, featureKey, type Feature, type LayerDelta, type LayerId } from '@ind-intg/shared';
+import type { Redis } from 'ioredis';
+
+const indexKey = (layer: LayerId) => `idx:${layer}`;
+
+/**
+ * Features live in Redis as one key per feature (`feat:<layer>:<id>`, with TTL) plus a per-layer id set.
+ * Workers write here; every change is published on the layer channel for the gateway.
+ */
+export class FeatureStore {
+  constructor(private redis: Redis) {}
+
+  /** All live features of a layer. Ids whose key has expired are pruned from the index. */
+  async snapshot(layer: LayerId): Promise<Feature[]> {
+    const ids = await this.redis.smembers(indexKey(layer));
+    if (!ids.length) return [];
+    const values = await this.redis.mget(...ids.map((id) => featureKey(layer, id)));
+    const expired = ids.filter((_, i) => values[i] == null);
+    if (expired.length) await this.redis.srem(indexKey(layer), ...expired);
+    return values.filter((v): v is string => v != null).map((v) => JSON.parse(v) as Feature);
+  }
+
+  /**
+   * Replaces a layer with the latest full result of a polled source: refreshes TTLs, publishes an `upsert`
+   * delta with new or changed features and a `remove` delta with features no longer in the source.
+   */
+  async sync(layer: LayerId, features: Feature[], ttlSeconds: number): Promise<{ upserted: number; removed: number }> {
+    const previous = new Map((await this.snapshot(layer)).map((f) => [f.id, JSON.stringify(f)]));
+    const changed: Feature[] = [];
+    const next = new Set<string>();
+    for (const f of features) {
+      const json = JSON.stringify(f);
+      next.add(f.id);
+      await this.redis.set(featureKey(layer, f.id), json, 'EX', ttlSeconds);
+      if (previous.get(f.id) !== json) changed.push(f);
+    }
+    if (next.size) await this.redis.sadd(indexKey(layer), ...next);
+    const removed = [...previous.keys()].filter((id) => !next.has(id));
+    if (removed.length) {
+      await this.redis.del(...removed.map((id) => featureKey(layer, id)));
+      await this.redis.srem(indexKey(layer), ...removed);
+    }
+    if (changed.length) await this.publish({ type: 'upsert', layer, features: changed });
+    if (removed.length) await this.publish({ type: 'remove', layer, ids: removed });
+    return { upserted: changed.length, removed: removed.length };
+  }
+
+  private async publish(delta: LayerDelta) {
+    await this.redis.publish(channelFor(delta.layer), JSON.stringify(delta));
+  }
+}

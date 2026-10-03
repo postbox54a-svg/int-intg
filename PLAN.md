@@ -17,7 +17,7 @@ Exit criteria for every phase: `pnpm typecheck`, `pnpm lint`, `pnpm test` pass; 
   boundaries hidden; collapsible left layer panel from the registry with toggles + live counts; IST clock top-right;
   attribution footer + disclaimer ("Public data, may be delayed or incomplete. Not for navigation or emergency
   use. Emergencies: 112.").
-- [ ] **Phase 2 – Earthquakes + gateway** (`phase-2-earthquakes`): workers/quakes.ts polls USGS GeoJSON every 60 s →
+- [x] **Phase 2 – Earthquakes + gateway** (`phase-2-earthquakes`): workers/quakes.ts polls USGS GeoJSON every 60 s →
   INDIA_BBOX → Feature → Redis (TTL) + publish `quakes`. WebSocket gateway (snapshot on subscribe, then deltas,
   per-layer subscriptions). Web: circles sized by magnitude, popup (place, mag, depth, IST time). Fixture test.
 - [ ] **Phase 3 – Flights** (`phase-3-flights`): workers/flights.ts, adsb.lol primary, OpenSky (OAuth2 client
@@ -40,7 +40,7 @@ Exit criteria for every phase: `pnpm typecheck`, `pnpm lint`, `pnpm test` pass; 
   Bengaluru.
 
 ## Next step
-Phase 2 – Earthquakes + gateway, on branch `phase-2-earthquakes`.
+Phase 3 – Flights, on branch `phase-3-flights`.
 
 ## Notes / deviations
 - Phase 0 was run in a local Windows session, not the cloud: Redis, Docker and gh were not installed. The
@@ -65,3 +65,13 @@ Phase 2 – Earthquakes + gateway, on branch `phase-2-earthquakes`.
   filled from the SOI GeoJSON) and shows a note. The Phase 1 screenshot shows this fallback, because the cloud proxy
   blocks tiles.openfreemap.org. Layer counts stay 0 until the Phase 2 gateway fills them. The panel shows worker
   notes (for example a missing key) from `/api/status`.
+- Phase 2: workers/quakes.ts polls `USGS_FEED_URL` (default: the USGS `2.5_week` feed, so it matches the 7-day TTL)
+  every 60 s. `FeatureStore.sync` stores each feature as `feat:<layer>:<id>` with a TTL, plus an `idx:<layer>` id set.
+  It publishes `upsert` (new or changed features) and `remove` deltas on `layer:<id>`. The gateway (`src/gateway.ts`)
+  psubscribes to `layer:*`. It sends `hello` on connect and a snapshot on subscribe. Deltas that arrive while a
+  snapshot is loading are queued and sent after it. The protocol types live in packages/shared/src/protocol.ts.
+  The web client (`src/live.ts`) subscribes only to enabled layers, reconnects with backoff, and batches renders
+  per animation frame. Data layers render below the SOI line.
+- Phase 2 was **not verified with real data**: earthquake.usgs.gov is blocked in the cloud. Against the real URL the
+  worker logs the 403 and backs off. The screenshot uses `fixtures/usgs-quakes.synthetic.geojson` (invented events)
+  via a `file://` USGS_FEED_URL. To check with real data, run `pnpm dev` locally without USGS_FEED_URL.
