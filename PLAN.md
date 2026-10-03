@@ -12,7 +12,7 @@ Exit criteria for every phase: `pnpm typecheck`, `pnpm lint`, `pnpm test` pass; 
 - [x] **Phase 0 – Scaffold** (`phase-0-scaffold`): pnpm monorepo (@ind-intg/web, @ind-intg/ingest,
   @ind-intg/shared), shared Feature type + INDIA_BBOX + layer registry, infra/docker-compose.yml (Redis),
   vitest + eslint, root `pnpm dev`, CI workflow, SessionStart hook, .env.example.
-- [ ] **Phase 1 – Map shell** (`phase-1-map-shell`): full-screen dark MapLibre v5 map (OpenFreeMap), centred on
+- [x] **Phase 1 – Map shell** (`phase-1-map-shell`): full-screen dark MapLibre v5 map (OpenFreeMap), centred on
   India zoom ~4.2, globe/flat toggle; Survey of India boundary (datameet/maps) GeoJSON line layer on top, basemap
   boundaries hidden; collapsible left layer panel from the registry with toggles + live counts; IST clock top-right;
   attribution footer + disclaimer ("Public data, may be delayed or incomplete. Not for navigation or emergency
@@ -40,7 +40,7 @@ Exit criteria for every phase: `pnpm typecheck`, `pnpm lint`, `pnpm test` pass; 
   Bengaluru.
 
 ## Next step
-Phase 1 – Map shell, on branch `phase-1-map-shell`.
+Phase 2 – Earthquakes + gateway, on branch `phase-2-earthquakes`.
 
 ## Notes / deviations
 - Phase 0 was run in a local Windows session, not the cloud: Redis, Docker and gh were not installed. The
@@ -58,3 +58,10 @@ Phase 1 – Map shell, on branch `phase-1-map-shell`.
   are added in Phase 1.
 - Shared and ingest code run straight from TS source (`tsx`, with Vite resolving the workspace). There is no
   build step for packages/shared.
+- Phase 1: the SOI boundary is `apps/web/public/geo/india-soi.geojson`. It comes from datameet `Country/india-soi.geojson`
+  (12 MB), simplified to about 210 KB with `npx mapshaper india-soi.geojson -simplify 4% keep-shapes -clean -o precision=0.0001`.
+  Basemap layers whose source-layer is `boundary`, or whose id matches boundary/admin, are removed before the style
+  is used. If the OpenFreeMap style can't be fetched within 5 s, the map falls back to an offline dark style (India
+  filled from the SOI GeoJSON) and shows a note. The Phase 1 screenshot shows this fallback, because the cloud proxy
+  blocks tiles.openfreemap.org. Layer counts stay 0 until the Phase 2 gateway fills them. The panel shows worker
+  notes (for example a missing key) from `/api/status`.
