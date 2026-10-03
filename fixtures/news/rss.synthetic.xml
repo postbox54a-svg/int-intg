@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- SYNTHETIC FIXTURE: invented articles in RSS 2.0 format. -->
+<rss version="2.0"><channel><title>Example Paper (synthetic)</title><link>https://example-paper.invalid/</link><description>fixture</description>
+    <item>
+      <title><![CDATA[Mumbai rains: heavy rain lashes city, local trains delayed]]></title>
+      <link>https://example-paper.invalid/news/mumbai-rains-trains/</link>
+      <pubDate>Sat, 03 Oct 2026 15:05:00 +0000</pubDate>
+      <description><![CDATA[Commuters stranded as water logs tracks.]]></description>
+    </item>
+    <item>
+      <title><![CDATA[Kochi port handles record cargo in September]]></title>
+      <link>https://example-paper.invalid/news/kochi-port-record/</link>
+      <pubDate>Sat, 03 Oct 2026 14:55:00 +0000</pubDate>
+      <description><![CDATA[Kochi port authority figures.]]></description>
+    </item>
+    <item>
+      <title><![CDATA[Srinagar tulip garden to expand next spring]]></title>
+      <link>https://example-paper.invalid/news/srinagar-tulips/</link>
+      <pubDate>Sat, 03 Oct 2026 14:35:00 +0000</pubDate>
+    </item>
+    <item>
+      <title><![CDATA[Farmers protest new procurement rules]]></title>
+      <link>https://example-paper.invalid/news/farmers-protest/</link>
+      <pubDate>Sat, 03 Oct 2026 14:25:00 +0000</pubDate>
+      <description><![CDATA[Protests reported from Ludhiana and nearby districts.]]></description>
+    </item>
+    <item>
+      <title><![CDATA[<b>Ahmedabad</b> riverfront gets new pedestrian bridge]]></title>
+      <link>https://example-paper.invalid/news/ahmedabad-bridge/</link>
+      <pubDate>Sat, 03 Oct 2026 14:10:00 +0000</pubDate>
+    </item>
+</channel></rss>

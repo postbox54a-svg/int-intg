@@ -18,6 +18,8 @@ export function toFeatureCollection(features: Feature[] = []): FC {
 export interface LayerRenderer {
   /** Map layers drawn from the GeoJSON source named after the layer id. */
   layers: LayerSpecification[];
+  /** Extra GeoJSON source options, e.g. clustering. */
+  source?: { cluster?: boolean; clusterRadius?: number; clusterMaxZoom?: number };
   /** Features -> source data; defaults to points at each feature's lat/lon. */
   toGeoJSON?(features: Feature[]): FeatureCollection<Geometry>;
   /** Rows for the click popup: [label, value]. */
@@ -108,6 +110,50 @@ export const ALERTS: LayerRenderer = {
   },
 };
 
+const NEWS_COLOUR = '#ba68c8';
+
+export const NEWS: LayerRenderer = {
+  source: { cluster: true, clusterRadius: 40, clusterMaxZoom: 11 },
+  layers: [
+    {
+      id: 'news-clusters',
+      type: 'circle',
+      source: 'news',
+      filter: ['has', 'point_count'],
+      paint: {
+        'circle-color': NEWS_COLOUR,
+        'circle-opacity': 0.8,
+        'circle-radius': ['step', ['get', 'point_count'], 12, 5, 16, 20, 22],
+        'circle-stroke-color': '#0b0f14',
+        'circle-stroke-width': 1.5,
+      },
+    },
+    {
+      // Needs glyphs; skipped by MapView when the style has none (offline fallback).
+      id: 'news-cluster-count',
+      type: 'symbol',
+      source: 'news',
+      filter: ['has', 'point_count'],
+      layout: { 'text-field': ['get', 'point_count_abbreviated'], 'text-size': 11, 'text-font': ['Noto Sans Regular'] },
+      paint: { 'text-color': '#ffffff' },
+    },
+    {
+      id: 'news-points',
+      type: 'circle',
+      source: 'news',
+      filter: ['!', ['has', 'point_count']],
+      paint: { 'circle-color': NEWS_COLOUR, 'circle-radius': 6, 'circle-stroke-color': '#0b0f14', 'circle-stroke-width': 1.5 },
+    },
+  ],
+  popup: (p) => [
+    ['Headline', typeof p.title === 'string' ? p.title : 'n/a'],
+    ['Place', [p.place, p.admin1].filter((v) => typeof v === 'string' && v).join(', ') || 'n/a'],
+    ['Source', typeof p.source === 'string' ? p.source : 'n/a'],
+    ['Published', istOrNa(p.ts)],
+  ],
+  link: (p) => (typeof p.url === 'string' && /^https?:\/\//.test(p.url) ? p.url : null),
+};
+
 /** Renderers for MapLibre-drawn layers that have landed; flights are drawn with deck.gl (see flights.ts). */
 // Order matters: earlier entries draw underneath (alert areas below quake circles).
-export const RENDERERS: Partial<Record<LayerId, LayerRenderer>> = { alerts: ALERTS, quakes: QUAKES };
+export const RENDERERS: Partial<Record<LayerId, LayerRenderer>> = { alerts: ALERTS, quakes: QUAKES, news: NEWS };

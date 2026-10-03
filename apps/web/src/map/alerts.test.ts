@@ -38,6 +38,6 @@ describe('alerts rendering', () => {
   });
 
   it('draws alert areas underneath quake circles', () => {
-    expect(Object.keys(RENDERERS)).toEqual(['alerts', 'quakes']);
+    expect(Object.keys(RENDERERS)).toEqual(['alerts', 'quakes', 'news']);
   });
 });

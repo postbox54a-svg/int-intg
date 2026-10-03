@@ -1,0 +1,155 @@
+{
+ "_note": "SYNTHETIC FIXTURE - invented articles in GDELT DOC 2.0 artlist format; example .invalid URLs",
+ "articles": [
+  {
+   "url": "https://example-news.invalid/mumbai-rain-trains",
+   "url_mobile": "",
+   "title": "Heavy rain lashes Mumbai, local trains delayed",
+   "seendate": "20261003T151000Z",
+   "socialimage": "",
+   "domain": "example-news.invalid",
+   "language": "English",
+   "sourcecountry": "India"
+  },
+  {
+   "url": "https://example-daily.invalid/chennai-metro-milestone",
+   "url_mobile": "",
+   "title": "Chennai metro phase 2 tunnel boring reaches milestone",
+   "seendate": "20261003T150500Z",
+   "socialimage": "",
+   "domain": "example-daily.invalid",
+   "language": "English",
+   "sourcecountry": "India"
+  },
+  {
+   "url": "https://example-news.invalid/bengaluru-ai-signals",
+   "url_mobile": "",
+   "title": "Bengaluru traffic police launch AI signal pilot",
+   "seendate": "20261003T145000Z",
+   "socialimage": "",
+   "domain": "example-news.invalid",
+   "language": "English",
+   "sourcecountry": "India"
+  },
+  {
+   "url": "https://example-times.invalid/delhi-aqi-poor",
+   "url_mobile": "",
+   "title": "Air quality in Delhi slips to poor as winds slow",
+   "seendate": "20261003T144000Z",
+   "socialimage": "",
+   "domain": "example-times.invalid",
+   "language": "English",
+   "sourcecountry": "India"
+  },
+  {
+   "url": "https://example-daily.invalid/guwahati-startup-summit",
+   "url_mobile": "",
+   "title": "Guwahati hosts northeast startup summit",
+   "seendate": "20261003T143000Z",
+   "socialimage": "",
+   "domain": "example-daily.invalid",
+   "language": "English",
+   "sourcecountry": "India"
+  },
+  {
+   "url": "https://example-times.invalid/kolkata-puja-crowds",
+   "url_mobile": "",
+   "title": "Kolkata Durga Puja pandals draw early crowds",
+   "seendate": "20261003T142000Z",
+   "socialimage": "",
+   "domain": "example-times.invalid",
+   "language": "English",
+   "sourcecountry": "India"
+  },
+  {
+   "url": "https://example-news.invalid/pune-it-jobs",
+   "url_mobile": "",
+   "title": "Pune IT park adds 5,000 jobs, says state minister",
+   "seendate": "20261003T141500Z",
+   "socialimage": "",
+   "domain": "example-news.invalid",
+   "language": "English",
+   "sourcecountry": "India"
+  },
+  {
+   "url": "https://example-legal.invalid/bombay-hc-housing",
+   "url_mobile": "",
+   "title": "Bombay High Court reserves verdict in housing case",
+   "seendate": "20261003T140000Z",
+   "socialimage": "",
+   "domain": "example-legal.invalid",
+   "language": "English",
+   "sourcecountry": "India"
+  },
+  {
+   "url": "https://example-daily.invalid/lucknow-terminal",
+   "url_mobile": "",
+   "title": "Lucknow airport new terminal opens to passengers",
+   "seendate": "20261003T135000Z",
+   "socialimage": "",
+   "domain": "example-daily.invalid",
+   "language": "English",
+   "sourcecountry": "India"
+  },
+  {
+   "url": "https://example-news.invalid/monsoon-withdrawal",
+   "url_mobile": "",
+   "title": "Monsoon withdrawal delayed, IMD says",
+   "seendate": "20261003T134000Z",
+   "socialimage": "",
+   "domain": "example-news.invalid",
+   "language": "English",
+   "sourcecountry": "India"
+  },
+  {
+   "url": "https://example-news.invalid/mumbai-rain-trains?utm_source=gdelt",
+   "url_mobile": "",
+   "title": "Heavy rain lashes Mumbai; local trains delayed",
+   "seendate": "20261003T133000Z",
+   "socialimage": "",
+   "domain": "example-news.invalid",
+   "language": "English",
+   "sourcecountry": "India"
+  },
+  {
+   "url": "https://example-biz.invalid/markets-close",
+   "url_mobile": "",
+   "title": "Stock markets close higher on bank rally",
+   "seendate": "20261003T132000Z",
+   "socialimage": "",
+   "domain": "example-biz.invalid",
+   "language": "English",
+   "sourcecountry": "India"
+  },
+  {
+   "url": "https://example-arts.invalid/jlf-dates",
+   "url_mobile": "",
+   "title": "Jaipur Literature Festival announces dates",
+   "seendate": "20261003T131000Z",
+   "socialimage": "",
+   "domain": "example-arts.invalid",
+   "language": "English",
+   "sourcecountry": "India"
+  },
+  {
+   "url": "https://example-biz.invalid/hyderabad-biotech",
+   "url_mobile": "",
+   "title": "Hyderabad biotech firm wins export order",
+   "seendate": "20261003T130000Z",
+   "socialimage": "",
+   "domain": "example-biz.invalid",
+   "language": "English",
+   "sourcecountry": "India"
+  },
+  {
+   "url": "https://example-news.invalid/patna-old",
+   "url_mobile": "",
+   "title": "Old story from yesterday about Patna floods",
+   "seendate": "20261002T060000Z",
+   "socialimage": "",
+   "domain": "example-news.invalid",
+   "language": "English",
+   "sourcecountry": "India"
+  }
+ ]
+}
