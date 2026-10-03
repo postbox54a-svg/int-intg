@@ -1,0 +1,15 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "pnpm install --prefer-offline >/dev/null 2>&1 || echo 'pnpm install failed'; (redis-cli ping >/dev/null 2>&1 || service redis-server start >/dev/null 2>&1) && echo 'redis: up' || echo 'redis: not started (no service command or not installed)'",
+            "timeout": 300
+          }
+        ]
+      }
+    ]
+  }
+}
