@@ -4,7 +4,7 @@ import type { MapboxOverlay } from '@deck.gl/mapbox';
 import type { GeoJSONSource, LngLatLike, Map as MlMap, Popup } from 'maplibre-gl';
 import type { LayerData } from '../live';
 import { PLANE_ICON, flightColour, flightPopup, interpolate } from './flights';
-import { RENDERERS, toFeatureCollection, type LayerRenderer } from './layers';
+import { PORTS, RENDERERS, toFeatureCollection, type LayerRenderer } from './layers';
 import { INDIA_CENTER, INDIA_ZOOM, SOI_ATTRIBUTION, SOI_BOUNDARY_URL, loadBaseStyle, soiLayers } from './style';
 
 export type Projection = 'mercator' | 'globe';
@@ -45,6 +45,7 @@ export function MapView({ projection, data, enabled, onBasemapFallback, onViewpo
   const [map, setMap] = useState<MlMap | null>(null);
   const [deck, setDeck] = useState<Deck | null>(null);
   const popup = useRef<{ layer: LayerId; popup: Popup } | null>(null);
+  const portLabels = useRef<HTMLElement[]>([]);
   const openPopup = useRef<(layer: LayerId, at: LngLatLike, content: HTMLElement) => void>(() => {});
 
   useEffect(() => {
@@ -106,6 +107,13 @@ export function MapView({ projection, data, enabled, onBasemapFallback, onViewpo
         const overlay = new MapboxOverlay({ interleaved: true, layers: [] });
         m.addControl(overlay);
         setDeck({ overlay, Overlay: MapboxOverlay, IconLayer });
+        // HTML markers rather than a symbol layer, so port names show even without basemap glyphs.
+        portLabels.current = PORTS.map(({ name, lon, lat }) => {
+          const el = Object.assign(document.createElement('div'), { className: 'port-label', textContent: name });
+          el.style.display = 'none';
+          new maplibregl.Marker({ element: el, anchor: 'left', offset: [6, 0] }).setLngLat([lon, lat]).addTo(m);
+          return el;
+        });
         const report = () => onViewportChange?.(m.getBounds().toArray().flat() as [number, number, number, number]);
         m.on('moveend', report);
         report();
@@ -140,6 +148,7 @@ export function MapView({ projection, data, enabled, onBasemapFallback, onViewpo
         if (map.getLayer(layer.id)) map.setLayoutProperty(layer.id, 'visibility', enabled.has(id) ? 'visible' : 'none');
       }
     }
+    for (const el of portLabels.current) el.style.display = enabled.has('ships') ? '' : 'none';
     if (popup.current && !enabled.has(popup.current.layer)) {
       popup.current.popup.remove();
       popup.current = null;

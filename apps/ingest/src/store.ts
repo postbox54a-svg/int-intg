@@ -62,6 +62,14 @@ export class FeatureStore {
     return { upserted: changed.length, removed: removed.length };
   }
 
+  /** Deletes features now (e.g. reclassified as filtered) and publishes a `remove` delta. */
+  async remove(layer: LayerId, ids: string[]): Promise<void> {
+    if (!ids.length) return;
+    await this.redis.del(...ids.map((id) => featureKey(layer, id)));
+    await this.redis.srem(indexKey(layer), ...ids);
+    await this.publish({ type: 'remove', layer, ids });
+  }
+
   /** Writes every feature (refreshing its TTL) and returns those that differ from `previous`. */
   private async write(layer: LayerId, features: Feature[], previous: Map<string, string>, ttlSeconds: Ttl) {
     const changed: Feature[] = [];

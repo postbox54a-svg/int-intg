@@ -30,7 +30,7 @@ Exit criteria for every phase: `pnpm typecheck`, `pnpm lint`, `pnpm test` pass; 
 - [x] **Phase 5 – News** (`phase-5-news`): workers/news.ts, GDELT DOC 2.0 artlist + configurable Indian RSS feeds;
   geocode with GeoNames India gazetteer (pop > 50k), drop unmatched; dedupe by URL + title similarity. Clustered
   pins + viewport-filtered live feed panel.
-- [ ] **Phase 6 – Ships** (`phase-6-ships`): workers/ships.ts, one persistent AISStream WebSocket (subscribe within
+- [x] **Phase 6 – Ships** (`phase-6-ships`): workers/ships.ts, one persistent AISStream WebSocket (subscribe within
   3 s, read continuously), PositionReport + ShipStaticData merged by MMSI, expire 15 min, reconnect with backoff,
   drop ship type 35. Colour by type; label JNPT, Mundra, Chennai, Visakhapatnam, Kochi, Kolkata.
 - [ ] **Phase 7 – Polish** (`phase-7-polish`): URL layer state, search (cities, callsigns), PostGIS history + 24 h
@@ -40,7 +40,7 @@ Exit criteria for every phase: `pnpm typecheck`, `pnpm lint`, `pnpm test` pass; 
   Bengaluru.
 
 ## Next step
-Phase 6 – Ships, on branch `phase-6-ships`.
+Phase 7 – Polish, on branch `phase-7-polish`.
 
 ## Notes / deviations
 - Phase 0 was run in a local Windows session, not the cloud: Redis, Docker and gh were not installed. The
@@ -120,3 +120,21 @@ Phase 6 – Ships, on branch `phase-6-ships`.
 - Phase 5 was **not verified with real data**: api.gdeltproject.org, download.geonames.org and the news sites are
   blocked in the cloud. The default RSS feed URLs (The Hindu, Indian Express, Hindustan Times) are unverified.
 - Mobile (390 px): the layer panel, clock and news panel crowd each other. This is left for the Phase 7 mobile layout.
+- Phase 6: `workers/ships.ts`. Each `tick()` is one AISStream connection: it sends the subscription on open (the
+  4 SEA_BOXES, PositionReport + Class B + ShipStaticData), reads continuously, and flushes changed ships every 5 s
+  (`store.merge`, 15 min TTL). The tick resolves after a healthy session (>= 60 s with traffic), so runWorker
+  reconnects at once; otherwise it throws and runWorker backs off exponentially. The session also ends on a server
+  `{error}` (bad key), when no message arrives for 120 s, and when no connection is made within 10 s. Node's
+  WebSocket may never fire `close` after a failed connect, so every exit path ends the session itself.
+  `ShipTracker` merges positions and static data by MMSI. Type 35 is dropped, and a ship already shown is removed
+  (`store.remove`) when its static data later says 35. AIS "not available" values (SOG 102.3, COG 360,
+  heading 511) become null.
+- Phase 6 web: circles coloured by category (cargo, tanker, passenger, fishing, tug, high-speed, pleasure, special,
+  other), with a legend under Ships in the panel. Popup: name, MMSI, type, speed, course, nav status, destination,
+  call sign, last seen in IST. The 6 port labels (JNPT, Mundra, Chennai, Visakhapatnam, Kochi, Kolkata) are HTML
+  markers, so they work without basemap glyphs, and show only while Ships is on.
+- Phase 6 was **not verified against AISStream**: stream.aisstream.io is blocked in the cloud and no
+  AISSTREAM_API_KEY is set. Verified instead against a local mock AISStream WebSocket (scratch script, not
+  committed). The mock enforced the 3 s subscription deadline and the key, then replayed the fixture with moving
+  ships: 43 ships were stored. A wrong key gave "Api Key Is Not Valid" and backoff. The real host gave a network
+  error and backoff.
